@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { databaseConfig } from './config/database.config';
+import { UrlModule } from './modules/url/url.module';
 
 @Module({
   imports: [
@@ -13,8 +12,7 @@ import { databaseConfig } from './config/database.config';
       ...databaseConfig.read,
       name: 'read',
     }),
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    UrlModule,
+  ]
 })
 export class AppModule {}
