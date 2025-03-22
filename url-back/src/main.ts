@@ -12,7 +12,10 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    customSiteTitle: 'URL Shortener API',
+    customCss: '.swagger-ui .topbar { display: none }'
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }
