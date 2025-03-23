@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { databaseConfig } from './config/database.config';
 import { UrlModule } from './modules/url/url.module';
-import { QueueModule } from './infrastructure/queue/queue.module';
+import { QueueModule } from './infra/queue/queue.module';
 import { TrackerModule } from './modules/tracker/tracker.module';
 import { cacheConfig } from './config/cache.config';
 

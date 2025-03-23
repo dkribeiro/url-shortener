@@ -1,7 +1,7 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { TrackerRepository } from '../../db/tracker.repository';
 import { UrlRepository } from '../../../url/db/url.repository';
-import { QueueServiceInterface } from '../../../../infrastructure/queue/queue.service.interface';
+import { QueueServiceInterface } from '../../../../infra/queue/queue.service.interface';
 
 @Injectable()
 export class TrackVisitService {

@@ -10,7 +10,7 @@ import { GetVisitsController } from './use-cases/get-visits/get-visits.controlle
 import { GetVisitsService } from './use-cases/get-visits/get-visits.service';
 import { TrackVisitService } from './use-cases/track-visit/track-visit.service';
 import { TrackVisitProcessorService } from './use-cases/track-visit/track-visit-processor.service';
-import { QueueModule } from '../../infrastructure/queue/queue.module';
+import { QueueModule } from '../../infra/queue/queue.module';
 
 @Module({
   imports: [
