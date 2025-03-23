@@ -1,5 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, Headers, ForbiddenException } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags, ApiHeader } from '@nestjs/swagger';
 import { GetCountService } from './get-count.service';
 
 @ApiTags('Tracker')
@@ -9,6 +9,11 @@ export class GetCountController {
 
   @Get(':slug/count')
   @ApiOperation({ summary: 'Get visit count for a URL' })
+  @ApiHeader({
+    name: 'user_id',
+    description: 'Optional user ID for URL ownership verification',
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'Returns the visit count for the URL',
@@ -23,8 +28,11 @@ export class GetCountController {
       },
     },
   })
-  async getVisitCount(@Param('slug') slug: string) {
-    const count = await this.getCountService.handle(slug);
+  async getVisitCount(
+    @Param('slug') slug: string,
+    @Headers('user_id') userId?: string
+  ) {
+    const count = await this.getCountService.handle(slug, userId);
     return { count };
   }
 }

@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Param, Query, Headers, ForbiddenException } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags, ApiQuery, ApiHeader } from '@nestjs/swagger';
 import { GetVisitsService } from './get-visits.service';
 
 @ApiTags('Tracker')
@@ -11,6 +11,11 @@ export class GetVisitsController {
   @ApiOperation({ summary: 'Get visit details for a URL' })
   @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number for pagination' })
   @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Number of items per page' })
+  @ApiHeader({
+    name: 'user_id',
+    description: 'Optional user ID for URL ownership verification',
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'Returns the visit details for the URL',
@@ -39,7 +44,8 @@ export class GetVisitsController {
     @Param('slug') slug: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
+    @Headers('user_id') userId?: string,
   ) {
-    return this.getVisitsService.handle(slug, page, limit);
+    return this.getVisitsService.handle(slug, page, limit, userId);
   }
 }
