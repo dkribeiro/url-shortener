@@ -4,8 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { databaseConfig } from './config/database.config';
 import { UrlModule } from './modules/url/url.module';
-import { redisStore } from 'cache-manager-redis-store';
 import { QueueModule } from './modules/queue/queue.module';
+import { TrackerModule } from './modules/tracker/tracker.module';
 import { cacheConfig } from './config/cache.config';
 
 @Module({
@@ -19,6 +19,7 @@ import { cacheConfig } from './config/cache.config';
     CacheModule.registerAsync(cacheConfig),   
     UrlModule,
     QueueModule,
+    TrackerModule,
   ]
 })
 export class AppModule {}
