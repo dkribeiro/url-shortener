@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CacheModule } from '@nestjs/cache-manager';
 import { databaseConfig } from './config/database.config';
 import { UrlModule } from './modules/url/url.module';
+import { redisStore } from 'cache-manager-redis-store';
+import { QueueModule } from './modules/queue/queue.module';
+import { cacheConfig } from './config/cache.config';
 
 @Module({
   imports: [
@@ -12,7 +16,9 @@ import { UrlModule } from './modules/url/url.module';
       ...databaseConfig.read,
       name: 'read',
     }),
+    CacheModule.registerAsync(cacheConfig),   
     UrlModule,
+    QueueModule,
   ]
 })
 export class AppModule {}

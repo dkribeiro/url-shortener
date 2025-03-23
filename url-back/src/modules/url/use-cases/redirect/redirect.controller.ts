@@ -1,11 +1,14 @@
-import { Controller, Get, NotFoundException, Param, Res } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Res, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { RedirectService } from './redirect.service';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('')
 export class RedirectController {
   constructor(private redirectService: RedirectService) {}
 
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60000)
   @Get(':slug')
   async redirect(@Param('slug') slug: string, @Res() res: Response) {
     const result = await this.redirectService.handle(slug);
