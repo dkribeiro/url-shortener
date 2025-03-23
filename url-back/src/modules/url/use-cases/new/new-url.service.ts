@@ -6,14 +6,12 @@ import { NewUrlDto } from './new-url.dto';
 
 @Injectable()
 export class NewUrlService {
-
   constructor(
     private urlRepository: UrlRepository,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async handle(dto: NewUrlDto, userId?: string) {
-
     if (dto.slug) {
       const existingUrl = await this.urlRepository.findBySlug(dto.slug);
       if (existingUrl) {

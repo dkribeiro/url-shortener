@@ -33,10 +33,7 @@ export class NewUrlController {
     status: 400,
     description: 'Bad request - Invalid URL format or slug already exists',
   })
-  async create(
-    @Body() dto: NewUrlDto,
-    @Headers('user_id') userId?: string,
-  ) {
+  async create(@Body() dto: NewUrlDto, @Headers('user_id') userId?: string) {
     return this.newUrlService.handle(dto, userId);
   }
 }

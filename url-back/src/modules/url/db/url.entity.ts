@@ -12,7 +12,7 @@ export class UrlEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'text', nullable: false  })
+  @Column({ type: 'text', nullable: false })
   url: string;
 
   @Column({ type: 'varchar', length: 63, nullable: true })

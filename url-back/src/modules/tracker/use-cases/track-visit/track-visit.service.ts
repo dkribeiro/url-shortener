@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { TrackerRepository } from '../../db/tracker.repository';
 import { UrlRepository } from '../../../url/db/url.repository';
+import { QueueServiceInterface } from '../../../../infrastructure/queue/queue.service.interface';
 
 @Injectable()
 export class TrackVisitService {
@@ -9,29 +10,28 @@ export class TrackVisitService {
   constructor(
     private trackerRepository: TrackerRepository,
     private urlRepository: UrlRepository,
+    @Inject('QueueService') private queueService: QueueServiceInterface,
   ) {}
 
-  async handle(slug: string, visitData: {
-    user_agent?: string;
-    referrer?: string;
-    ip?: string;
-    location?: string;
-  }): Promise<void> {
+  async handle(
+    slug: string,
+    visitData: {
+      user_agent?: string;
+      referrer?: string;
+      ip?: string;
+      location?: string;
+    },
+  ): Promise<void> {
     try {
-      // Find the URL entity by slug
-      const urlEntity = await this.urlRepository.findBySlug(slug);
-      
-      if (!urlEntity) {
-        this.logger.warn(`Attempted to track visit for non-existent slug: ${slug}`);
-        return;
-      }
-
-      // Use the transaction method to ensure both operations succeed or fail together
-      await this.trackerRepository.trackVisitWithTransaction(urlEntity.id, visitData);
-      
-      this.logger.debug(`Tracked visit for slug: ${slug} within a transaction`);
+      const job = await this.queueService.addJob('track-visit', {
+        slug,
+        visitData,
+      });
     } catch (error) {
-      this.logger.error(`Error tracking visit for slug ${slug}: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error adding track visit job to queue for slug ${slug}: ${error.message}`,
+        error.stack,
+      );
     }
   }
 }

@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Param,
   Query,
   Headers,
   ForbiddenException,
@@ -13,15 +12,15 @@ import {
   ApiQuery,
   ApiHeader,
 } from '@nestjs/swagger';
-import { GetVisitsService } from './get-visits.service';
+import { ListUrlsService } from './list-urls.service';
 
-@ApiTags('Tracker')
-@Controller('tracker')
-export class GetVisitsController {
-  constructor(private readonly getVisitsService: GetVisitsService) {}
+@ApiTags('URL')
+@Controller('url')
+export class ListUrlsController {
+  constructor(private readonly listUrlsService: ListUrlsService) {}
 
-  @Get(':slug/visits')
-  @ApiOperation({ summary: 'Get visit details for a URL' })
+  @Get('list')
+  @ApiOperation({ summary: 'Get paginated list of URLs for the logged user' })
   @ApiQuery({
     name: 'page',
     required: false,
@@ -36,12 +35,12 @@ export class GetVisitsController {
   })
   @ApiHeader({
     name: 'user_id',
-    description: 'Optional user ID for URL ownership verification',
-    required: false,
+    description: 'User ID for URL ownership',
+    required: true,
   })
   @ApiResponse({
     status: 200,
-    description: 'Returns the visit details for the URL',
+    description: 'Returns the paginated list of URLs for the user',
     schema: {
       type: 'object',
       properties: {
@@ -51,11 +50,10 @@ export class GetVisitsController {
             type: 'object',
             properties: {
               id: { type: 'number' },
-              user_agent: { type: 'string', nullable: true },
-              referrer: { type: 'string', nullable: true },
-              ip: { type: 'string', nullable: true },
-              location: { type: 'string', nullable: true },
+              url: { type: 'string' },
+              slug: { type: 'string' },
               created_at: { type: 'string', format: 'date-time' },
+              updated_at: { type: 'string', format: 'date-time' },
             },
           },
         },
@@ -63,12 +61,15 @@ export class GetVisitsController {
       },
     },
   })
-  async getVisits(
-    @Param('slug') slug: string,
+  async getUrlsList(
+    @Headers('user_id') userId: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-    @Headers('user_id') userId?: string,
   ) {
-    return this.getVisitsService.handle(slug, page, limit, userId);
+    if (!userId) {
+      throw new ForbiddenException('User ID is required');
+    }
+
+    return this.listUrlsService.handle(userId, page, limit);
   }
 }

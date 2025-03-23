@@ -7,15 +7,23 @@ import { UrlEntity } from './db/url.entity';
 import { IdEncoderService } from './utils/id-encoder.service';
 import { RedirectController } from './use-cases/redirect/redirect.controller';
 import { RedirectService } from './use-cases/redirect/redirect.service';
+import { ListUrlsController } from './use-cases/list/list-urls.controller';
+import { ListUrlsService } from './use-cases/list/list-urls.service';
 import { TrackerModule } from '../tracker/tracker.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UrlEntity]),
-    forwardRef(() => TrackerModule)
+    forwardRef(() => TrackerModule),
   ],
-  controllers: [NewUrlController, RedirectController],
-  providers: [NewUrlService, UrlRepository, IdEncoderService, RedirectService],
+  controllers: [NewUrlController, RedirectController, ListUrlsController],
+  providers: [
+    NewUrlService,
+    UrlRepository,
+    IdEncoderService,
+    RedirectService,
+    ListUrlsService,
+  ],
   exports: [NewUrlService, UrlRepository],
 })
 export class UrlModule {}

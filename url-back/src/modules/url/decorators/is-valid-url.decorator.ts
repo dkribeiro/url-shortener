@@ -1,7 +1,11 @@
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidationArguments,
+} from 'class-validator';
 
 export function IsValidUrl(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isValidUrl',
       target: object.constructor,
@@ -18,7 +22,10 @@ export function IsValidUrl(validationOptions?: ValidationOptions) {
               return false;
             }
             const hostnameParts = urlObject.hostname.split('.');
-            return hostnameParts.length >= 2 && !!hostnameParts[hostnameParts.length - 1];
+            return (
+              hostnameParts.length >= 2 &&
+              !!hostnameParts[hostnameParts.length - 1]
+            );
           } catch (error) {
             return false;
           }

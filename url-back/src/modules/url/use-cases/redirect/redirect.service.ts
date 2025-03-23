@@ -9,29 +9,28 @@ export class RedirectService {
 
   constructor(
     private urlRepository: UrlRepository,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async handle(slug: string) {
-      // Try to get the URL from cache first
-      const cachedUrl = await this.cacheManager.get<string>(`url:${slug}`);
-      if (cachedUrl) {
-        this.logger.debug(`Cache hit for slug: ${slug}`);
-        return cachedUrl;
-      }
+    // Try to get the URL from cache first
+    const cachedUrl = await this.cacheManager.get<string>(`url:${slug}`);
+    if (cachedUrl) {
+      this.logger.debug(`Cache hit for slug: ${slug}`);
+      return cachedUrl;
+    }
 
-      this.logger.debug(`Cache miss for slug: ${slug}`);
+    this.logger.debug(`Cache miss for slug: ${slug}`);
 
-      // If not in cache, get from database
-      const urlEntity = await this.urlRepository.findBySlug(slug);
-      if (!urlEntity) {
-        return null;
-      }
+    // If not in cache, get from database
+    const urlEntity = await this.urlRepository.findBySlug(slug);
+    if (!urlEntity) {
+      return null;
+    }
 
-      // Store in cache for future requests
-      await this.cacheManager.set(`url:${slug}`, urlEntity.url);
-      
-      return urlEntity.url;
-    
+    // Store in cache for future requests
+    await this.cacheManager.set(`url:${slug}`, urlEntity.url);
+
+    return urlEntity.url;
   }
 }

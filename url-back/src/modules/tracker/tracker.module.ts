@@ -9,14 +9,21 @@ import { GetCountService } from './use-cases/get-count/get-count.service';
 import { GetVisitsController } from './use-cases/get-visits/get-visits.controller';
 import { GetVisitsService } from './use-cases/get-visits/get-visits.service';
 import { TrackVisitService } from './use-cases/track-visit/track-visit.service';
+import { QueueModule } from '../../infrastructure/queue/queue.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([TrackerCounterEntity, TrackerVisitEntity]),
     forwardRef(() => UrlModule),
+    QueueModule,
   ],
   controllers: [GetCountController, GetVisitsController],
-  providers: [GetCountService, GetVisitsService, TrackVisitService, TrackerRepository],
-  exports: [TrackVisitService],
+  providers: [
+    GetCountService,
+    GetVisitsService,
+    TrackVisitService,
+    TrackerRepository,
+  ],
+  exports: [TrackVisitService, TrackerRepository],
 })
 export class TrackerModule {}

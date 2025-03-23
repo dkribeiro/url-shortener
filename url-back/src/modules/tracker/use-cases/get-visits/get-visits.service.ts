@@ -11,7 +11,12 @@ export class GetVisitsService {
     private urlRepository: UrlRepository,
   ) {}
 
-  async handle(slug: string, page: number = 1, limit: number = 10, userId?: string): Promise<{
+  async handle(
+    slug: string,
+    page: number = 1,
+    limit: number = 10,
+    userId?: string,
+  ): Promise<{
     items: any[];
     total: number;
   }> {
@@ -20,18 +25,23 @@ export class GetVisitsService {
       if (!urlEntity) {
         return { items: [], total: 0 };
       }
-      
+
       // Check if URL has an owner and if it belongs to the requesting user
       if (urlEntity.user_id && urlEntity.user_id !== userId) {
-        throw new ForbiddenException('You do not have permission to view this URL\'s statistics');
+        throw new ForbiddenException(
+          "You do not have permission to view this URL's statistics",
+        );
       }
-      
+
       return this.trackerRepository.getVisits(urlEntity.id, page, limit);
     } catch (error) {
       if (error instanceof ForbiddenException) {
         throw error;
       }
-      this.logger.error(`Error getting visits for slug ${slug}: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error getting visits for slug ${slug}: ${error.message}`,
+        error.stack,
+      );
       return { items: [], total: 0 };
     }
   }

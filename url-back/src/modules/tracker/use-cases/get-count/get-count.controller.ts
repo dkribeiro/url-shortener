@@ -1,4 +1,10 @@
-import { Controller, Get, Param, Headers, ForbiddenException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Headers,
+  ForbiddenException,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiHeader } from '@nestjs/swagger';
 import { GetCountService } from './get-count.service';
 
@@ -30,7 +36,7 @@ export class GetCountController {
   })
   async getVisitCount(
     @Param('slug') slug: string,
-    @Headers('user_id') userId?: string
+    @Headers('user_id') userId?: string,
   ) {
     const count = await this.getCountService.handle(slug, userId);
     return { count };

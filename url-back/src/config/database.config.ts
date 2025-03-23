@@ -6,14 +6,18 @@ export const databaseConfig: {
 } = {
   write: {
     type: 'postgres',
-    url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/url_shortener',
+    url:
+      process.env.DATABASE_URL ||
+      'postgresql://postgres:postgres@localhost:5432/url_shortener',
     synchronize: process.env.NODE_ENV !== 'production',
     logging: false,
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   },
   read: {
     type: 'postgres',
-    url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/url_shortener',
+    url:
+      process.env.DATABASE_URL ||
+      'postgresql://postgres:postgres@localhost:5432/url_shortener',
     synchronize: false,
     logging: false,
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],

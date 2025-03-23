@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { databaseConfig } from './config/database.config';
 import { UrlModule } from './modules/url/url.module';
-import { QueueModule } from './modules/queue/queue.module';
+import { QueueModule } from './infrastructure/queue/queue.module';
 import { TrackerModule } from './modules/tracker/tracker.module';
 import { cacheConfig } from './config/cache.config';
 
@@ -16,10 +16,10 @@ import { cacheConfig } from './config/cache.config';
       ...databaseConfig.read,
       name: 'read',
     }),
-    CacheModule.registerAsync(cacheConfig),   
+    CacheModule.registerAsync(cacheConfig),
     UrlModule,
     QueueModule,
     TrackerModule,
-  ]
+  ],
 })
 export class AppModule {}
