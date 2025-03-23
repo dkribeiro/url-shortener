@@ -1,25 +1,44 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
-import { databaseConfig } from './config/database.config';
+import { APP_GUARD } from '@nestjs/core';
 import { UrlModule } from './modules/url/url.module';
-import { QueueModule } from './infra/queue/queue.module';
 import { TrackerModule } from './modules/tracker/tracker.module';
+import { CustomThrottlerGuard } from './infra/guards/throttler.guard';
+import { RedisThrottlerStorage } from './infra/storage/redis-throttler.storage';
 import { cacheConfig } from './config/cache.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot(databaseConfig.write),
     TypeOrmModule.forRoot({
-      ...databaseConfig.read,
-      name: 'read',
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'url_shortener',
+      autoLoadEntities: true,
+      synchronize: true,
     }),
     CacheModule.registerAsync(cacheConfig),
+    ThrottlerModule.forRootAsync({
+      useFactory: () => ({
+        throttlers: [{
+          ttl: 60000,
+          limit: 30,
+        }],
+        storage: new RedisThrottlerStorage(),
+      }),
+    }),
     UrlModule,
-    QueueModule,
     TrackerModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

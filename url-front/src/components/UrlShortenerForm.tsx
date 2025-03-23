@@ -2,12 +2,14 @@ import { useState } from 'react';
 import axios from 'axios';
 import { ClipboardIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { useUser } from '../contexts/UserContext';
 
 interface ShortenedUrl {
   slug: string;
 }
 
 export function UrlShortenerForm() {
+  const { userId } = useUser();
   const [url, setUrl] = useState('');
   const [slug, setSlug] = useState('');
   const [shortenedUrl, setShortenedUrl] = useState<string | null>(null);
@@ -20,10 +22,15 @@ export function UrlShortenerForm() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post<ShortenedUrl>('http://localhost:3000/url/new', {
-        url,
-        ...(slug && { slug }),
-      });
+      const headers = userId ? { user_id: userId } : undefined;
+      const response = await axios.post<ShortenedUrl>(
+        'http://localhost:3000/url/new',
+        {
+          url,
+          ...(slug && { slug }),
+        },
+        { headers }
+      );
       
       const baseUrl = 'http://localhost:3000';
       setShortenedUrl(`${baseUrl}/${response.data.slug}`);
@@ -57,7 +64,7 @@ export function UrlShortenerForm() {
   };
 
   return (
-    <div className="card shadow" style={{ maxWidth: '500px', width: '100%' }}>
+    <div className="card shadow mt-5" style={{ maxWidth: '500px', width: '100%' }}>
       <div className="card-header bg-primary text-white">
         <h5 className="card-title mb-0">URL Shortener</h5>
       </div>
