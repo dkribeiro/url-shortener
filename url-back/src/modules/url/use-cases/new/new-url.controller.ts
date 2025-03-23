@@ -32,6 +32,26 @@ export class NewUrlController {
   @ApiResponse({
     status: 400,
     description: 'Bad request - Invalid URL format or slug already exists',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: {
+          type: 'number',
+          example: 400,
+          description: 'HTTP status code',
+        },
+        message: {
+          type: 'string',
+          example: 'Invalid URL format or slug already exists',
+          description: 'Error message',
+        },
+        error: {
+          type: 'string',
+          example: 'Bad Request',
+          description: 'Error type',
+        },
+      },
+    },
   })
   async create(@Body() dto: NewUrlDto, @Headers('user_id') userId?: string) {
     return this.newUrlService.handle(dto, userId);
