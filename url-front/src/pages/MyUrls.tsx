@@ -27,7 +27,7 @@ export function MyUrls() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver | null>(null);
   const mountedRef = useRef(false);
 
   const lastUrlElementRef = useCallback((node: HTMLDivElement | null) => {
@@ -70,7 +70,7 @@ export function MyUrls() {
 
       try {
         setLoading(true);
-        const response = await axios.get<UrlResponse>('http://localhost:3000/url/list', {
+        const response = await axios.get<UrlResponse>(`${import.meta.env.VITE_API_URL}/url/list`, {
           params: {
             page,
             limit: PAGE_SIZE,
@@ -147,16 +147,16 @@ export function MyUrls() {
               <div className="flex-grow-1">
                 <div className="d-flex align-items-center mb-2">
                   <a
-                    href={`http://localhost:3000/${url.slug}`}
+                    href={`${import.meta.env.VITE_API_URL}/${url.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary text-decoration-none me-2"
                   >
-                    {`http://localhost:3000/${url.slug}`}
+                    {`${import.meta.env.VITE_API_URL}/${url.slug}`}
                   </a>
                   <button
                     className="btn btn-outline-secondary btn-sm me-2"
-                    onClick={() => copyToClipboard(`http://localhost:3000/${url.slug}`)}
+                    onClick={() => copyToClipboard(`${import.meta.env.VITE_API_URL}/${url.slug}`)}
                   >
                     <ClipboardIcon style={{ width: '1rem', height: '1rem' }} />
                   </button>

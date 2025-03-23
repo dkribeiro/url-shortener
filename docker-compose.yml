@@ -6,7 +6,7 @@ services:
       context: ./url-back
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3456:3000"
     volumes:
       - ./url-back:/usr/src/app
       - /usr/src/app/node_modules
@@ -16,8 +16,24 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./url-front
+      dockerfile: Dockerfile
+    ports:
+      - "3457:5173"
+    volumes:
+      - ./url-front:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3456
+    depends_on:
+      - api
 
   postgres:
     image: postgres:16-alpine
@@ -26,25 +42,36 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=url_shortener
     ports:
-      - "5432:5432"
+      - "3458:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "3459:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis-commander:
     image: rediscommander/redis-commander:latest
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - "8081:8081"
+      - "3460:8081"
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres_data:

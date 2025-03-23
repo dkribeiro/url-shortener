@@ -8,19 +8,11 @@ import { TrackerModule } from './modules/tracker/tracker.module';
 import { CustomThrottlerGuard } from './infra/guards/throttler.guard';
 import { RedisThrottlerStorage } from './infra/storage/redis-throttler.storage';
 import { cacheConfig } from './config/cache.config';
+import { databaseConfig } from './config/database.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'url_shortener',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(databaseConfig.write),
     CacheModule.registerAsync(cacheConfig),
     ThrottlerModule.forRootAsync({
       useFactory: () => ({

@@ -24,7 +24,7 @@ export function UrlShortenerForm() {
     try {
       const headers = userId ? { user_id: userId } : undefined;
       const response = await axios.post<ShortenedUrl>(
-        'http://localhost:3000/url/new',
+        `${import.meta.env.VITE_API_URL}/url/new`,
         {
           url,
           ...(slug && { slug }),
@@ -32,7 +32,7 @@ export function UrlShortenerForm() {
         { headers }
       );
       
-      const baseUrl = 'http://localhost:3000';
+      const baseUrl = import.meta.env.VITE_API_URL;
       setShortenedUrl(`${baseUrl}/${response.data.slug}`);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.message) {

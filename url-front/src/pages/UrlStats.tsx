@@ -59,18 +59,23 @@ export function UrlStats() {
 
       try {
         setLoading(true);
-        const [countResponse, visitsResponse] = await Promise.all([
-          axios.get<{ count: number }>(`http://localhost:3000/tracker/${slug}/count`, {
+        const countResponse = await axios.get<{ count: number }>(
+          `${import.meta.env.VITE_API_URL}/tracker/${slug}/count`,
+          {
             headers: userId ? { user_id: userId } : undefined,
-          }),
-          axios.get<VisitsResponse>(`http://localhost:3000/tracker/${slug}/visits`, {
+          },
+        );
+
+        const visitsResponse = await axios.get<VisitsResponse>(
+          `${import.meta.env.VITE_API_URL}/tracker/${slug}/visits`,
+          {
             params: {
               page,
               limit: PAGE_SIZE,
             },
             headers: userId ? { user_id: userId } : undefined,
-          }),
-        ]);
+          },
+        );
 
         if (mountedRef.current) {
           setVisitCount(countResponse.data.count);
