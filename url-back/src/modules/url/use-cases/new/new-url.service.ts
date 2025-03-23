@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UrlRepository } from '../../db/url.repository';
 import { NewUrlDto } from './new-url.dto';
-import { IdEncoderService } from '../../utils/id-encoder.service';
 
 @Injectable()
 export class NewUrlService {
@@ -9,6 +8,7 @@ export class NewUrlService {
   constructor(private urlRepository: UrlRepository) {}
 
   async handle(dto: NewUrlDto, userId?: string) {
+
     if (dto.slug) {
       const existingUrl = await this.urlRepository.findBySlug(dto.slug);
       if (existingUrl) {

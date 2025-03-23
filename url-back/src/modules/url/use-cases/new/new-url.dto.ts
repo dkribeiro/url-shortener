@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
+import { IsValidUrl } from '../../decorators/is-valid-url.decorator';
 
 export class NewUrlDto {
   @ApiProperty({
     description: 'The URL to be shortened',
     example: 'https://www.example.com/very-long-url',
   })
-  @IsUrl({}, { message: 'Invalid URL format' })
+  @IsValidUrl()
   url: string;
 
   @ApiProperty({
