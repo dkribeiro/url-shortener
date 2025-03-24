@@ -20,9 +20,19 @@ export function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary py-2 mb-4">
       <div className="container">
-        <Link className="navbar-brand py-0" to="/">
-          URL Shortener
-        </Link>
+        <div className="d-flex align-items-center">
+          <Link className="navbar-brand py-0" to="/">
+            URL Shortener
+          </Link>
+          <a
+            href={`${import.meta.env.VITE_API_URL}/api`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-outline-light btn-sm ms-3"
+          >
+            API Docs
+          </a>
+        </div>
 
         <div className="d-flex align-items-center gap-2">
           {userId ? (
