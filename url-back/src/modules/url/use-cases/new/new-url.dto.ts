@@ -12,7 +12,7 @@ export class NewUrlDto {
 
   @ApiProperty({
     description: 'Custom slug for the shortened URL (optional)',
-    example: 'my-custom-slug',
+    example: 'myslug',
     required: false,
     maxLength: 10,
   })

@@ -13,6 +13,7 @@ services:
       - ./url-back:/usr/src/app
       - /usr/src/app/node_modules
     environment:
+      - PORT=3000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/url_shortener
       - MAX_RETRIES=5
       - REDIS_HOST=redis

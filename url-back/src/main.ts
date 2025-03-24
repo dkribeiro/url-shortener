@@ -17,9 +17,16 @@ async function bootstrap() {
 
   // Enable CORS for all localhost origins
   app.enableCors({
-    origin: /^http:\/\/localhost:\d+$/,  // Allow any localhost port
+    origin: /^http:\/\/localhost:\d+$/, // Allow any localhost port
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'user_id', 'Accept', 'Origin', 'X-Requested-With'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'user_id',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+    ],
     exposedHeaders: ['Content-Length', 'Content-Type'],
     credentials: true,
     preflightContinue: false,
@@ -28,14 +35,29 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('URL Shortener API')
-    .setDescription('API documentation for URL Shortener service')
+    .setDescription(
+      `
+API documentation for URL Shortener service<br><br>
+
+<b>Developed by DK Ribeiro</b><br>
+
+<b>Links:</b><br>
+• <a href="https://www.linkedin.com/in/dkribeiro/" target="_blank">LinkedIn</a><br>
+• <a href="https://github.com/dkribeiro" target="_blank">GitHub</a>
+    `,
+    )
     .setVersion('1.0')
+    .addTag('URL Shortener', 'API for shortening and tracking URLs')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
     customSiteTitle: 'URL Shortener API',
-    customCss: '.swagger-ui .topbar { display: none }',
+    customCss: `
+      .swagger-ui .topbar { display: none }
+      .swagger-ui .description a { color: #6C47FF; }
+      .swagger-ui .description a:hover { color: #463297; }
+    `,
   });
 
   await app.listen(process.env.PORT ?? 3000);
