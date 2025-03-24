@@ -83,6 +83,7 @@ Implementation highlights:
 - Supports custom slugs with collision detection
 - Associates URLs with users when authenticated
 - Implements retry mechanism for slug generation on conflicts
+- Rate-limiting of 30 requests per minute
 
 ### URL Redirection
 ![URL Redirection Flow](docs/redirect.png)
