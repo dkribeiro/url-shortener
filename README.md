@@ -30,12 +30,6 @@ The following services are available at these ports:
 - Redis: localhost:3459
 - Redis Commander: http://localhost:3460 (Redis management interface)
 
-## Development
-
-The application is set up with hot-reload for both frontend and backend:
-
-- Frontend changes will be reflected immediately in the browser
-- Backend changes will trigger automatic rebuilds
 
 ## Environment Variables
 
