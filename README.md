@@ -1,6 +1,6 @@
-# URL Shortener
+# Dk's URL Shortener
 
-A URL shortener application with a NestJS backend and React frontend.
+A simple URL shortener application with a NestJS backend and React frontend.
 
 ## Prerequisites
 
