@@ -11,7 +11,7 @@ A simple URL shortener application with a NestJS backend and React frontend.
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/dkribeiro/url-shortener.git
 cd url-shortener
 ```
 
