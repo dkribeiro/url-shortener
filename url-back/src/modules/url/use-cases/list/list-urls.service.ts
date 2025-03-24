@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { UrlRepository } from '../../db/url.repository';
+import { UrlReadRepository } from '../../db/url-read.repository';
 
 @Injectable()
 export class ListUrlsService {
   private readonly logger = new Logger(ListUrlsService.name);
 
-  constructor(private urlRepository: UrlRepository) {}
+  constructor(private urlReadRepository: UrlReadRepository) {}
 
   async handle(
     userId: string,
@@ -16,7 +16,7 @@ export class ListUrlsService {
     total: number;
   }> {
     try {
-      return this.urlRepository.findByUserId(userId, page, limit);
+      return this.urlReadRepository.findByUserId(userId, page, limit);
     } catch (error) {
       this.logger.error(`Error retrieving URLs for user ${userId}:`, error);
       throw error;

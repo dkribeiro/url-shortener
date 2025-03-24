@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ListUrlsService } from './list-urls.service';
-import { UrlRepository } from '../../db/url.repository';
+import { UrlReadRepository } from '../../db/url-read.repository';
 import { UrlEntity } from '../../db/url.entity';
 
 describe('ListUrlsService', () => {
   let service: ListUrlsService;
-  let urlRepository: UrlRepository;
+  let urlReadRepository: UrlReadRepository;
 
   // Mock data
   const mockUrl: UrlEntity = {
@@ -23,7 +23,7 @@ describe('ListUrlsService', () => {
       providers: [
         ListUrlsService,
         {
-          provide: UrlRepository,
+          provide: UrlReadRepository,
           useValue: {
             findByUserId: jest.fn(),
           },
@@ -32,7 +32,7 @@ describe('ListUrlsService', () => {
     }).compile();
 
     service = module.get<ListUrlsService>(ListUrlsService);
-    urlRepository = module.get<UrlRepository>(UrlRepository);
+    urlReadRepository = module.get<UrlReadRepository>(UrlReadRepository);
   });
 
   // Test service instantiation
@@ -49,7 +49,7 @@ describe('ListUrlsService', () => {
       const limit = 10;
       const userId = 'user123';
 
-      jest.spyOn(urlRepository, 'findByUserId').mockResolvedValue({
+      jest.spyOn(urlReadRepository, 'findByUserId').mockResolvedValue({
         items: mockUrls,
         total: mockCount,
       });
@@ -59,12 +59,12 @@ describe('ListUrlsService', () => {
         items: mockUrls,
         total: mockCount,
       });
-      expect(urlRepository.findByUserId).toHaveBeenCalledWith(userId, page, limit);
+      expect(urlReadRepository.findByUserId).toHaveBeenCalledWith(userId, page, limit);
     });
 
     // Test empty result for non-existent user
     it('should return empty array for user with no URLs', async () => {
-      jest.spyOn(urlRepository, 'findByUserId').mockResolvedValue({
+      jest.spyOn(urlReadRepository, 'findByUserId').mockResolvedValue({
         items: [],
         total: 0,
       });
@@ -79,7 +79,7 @@ describe('ListUrlsService', () => {
     // Test error handling
     it('should throw error when repository fails', async () => {
       const error = new Error('Database error');
-      jest.spyOn(urlRepository, 'findByUserId').mockRejectedValue(error);
+      jest.spyOn(urlReadRepository, 'findByUserId').mockRejectedValue(error);
 
       await expect(service.handle('user123', 1, 10)).rejects.toThrow(error);
     });

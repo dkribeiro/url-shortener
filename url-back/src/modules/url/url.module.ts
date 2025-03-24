@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NewUrlController } from './use-cases/new/new-url.controller';
 import { NewUrlService } from './use-cases/new/new-url.service';
 import { UrlRepository } from './db/url.repository';
+import { UrlReadRepository } from './db/url-read.repository';
 import { UrlEntity } from './db/url.entity';
 import { IdEncoderService } from './utils/id-encoder.service';
 import { RedirectController } from './use-cases/redirect/redirect.controller';
@@ -20,6 +21,7 @@ import { TrackerModule } from '../tracker/tracker.module';
   providers: [
     NewUrlService,
     UrlRepository,
+    UrlReadRepository,
     IdEncoderService,
     RedirectService,
     ListUrlsService,

@@ -24,8 +24,8 @@ docker compose up -d
 
 The following services are available at these ports:
 
-- Frontend: http://localhost:3457 (React application)
-- API: http://localhost:3456/api (Swagger for the NestJS backend)
+- Frontend: http://localhost:5173 (React application)
+- API: http://localhost:3033/api (Swagger for the NestJS backend)
 - PostgreSQL: localhost:3458
 - Redis: localhost:3459
 - Redis Commander: http://localhost:3460 (Redis management interface)
