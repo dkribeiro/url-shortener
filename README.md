@@ -61,3 +61,105 @@ To stop and remove volumes:
 ```bash
 docker compose down -v
 ```
+
+---
+
+## Features and Implementation Details
+
+### URL Shortening
+![URL Shortening Flow](docs/new-url.png)
+
+The URL shortening process follows these steps:
+
+1. **Input Validation**: Validates the input URL and optional custom slug
+2. **Slug Handling**:
+   - If a custom slug is provided, checks for existing conflicts
+   - If no slug is provided, generates a unique one
+3. **Storage**:
+   - Saves the URL and slug in the database
+4. **Response**: Returns the generated/provided slug
+
+Implementation highlights:
+- Supports custom slugs with collision detection
+- Associates URLs with users when authenticated
+- Implements retry mechanism for slug generation on conflicts
+
+### URL Redirection
+![URL Redirection Flow](docs/redirect.png)
+
+The redirection process includes:
+
+1. **Slug Lookup**:
+   - First checks Redis cache for the URL
+   - Falls back to database if not in cache and store the url at the cache
+2. **Visit Tracking**:
+   - Sends a tracking event to the queue
+   - Asynchronously processes visit data
+3. **Redirection**:
+   - Returns 404 if URL not found
+   - Redirects to original URL if found
+
+Implementation highlights:
+- Implements caching strategy for fast redirects
+- Asynchronous tracking to minimize redirect latency
+- Handles user agent and referrer information
+
+### Visit Tracking
+![Visit Tracking Flow](docs/track.png)
+
+The tracking system processes visits asynchronously:
+
+1. **Queue Processing**:
+   - Consumes tracking events from the queue
+2. **Database Transaction**:
+   - Updates visit counter atomically
+   - Stores visit details (user agent, referrer, etc.)
+
+Implementation highlights:
+- Uses Bull queue for reliable event processing
+- Implements transactional updates
+- Stores detailed visit information for analytics
+
+### URL Management
+![URL List Flow](docs/url-list.png)
+
+Users can manage their shortened URLs through:
+
+1. **Paginated List**:
+   - Shows all URLs created by the user
+   - Implements efficient pagination
+2. **URL Details**:
+   - Original URL
+   - Creation date
+   - Usage statistics
+
+Implementation highlights:
+- Uses read replica for list queries
+- Implements cursor-based pagination
+- Optimized for performance with large datasets
+
+### Analytics
+The system provides two types of analytics:
+
+#### Visit Counter
+![Visit Counter Flow](docs/visits-count.png)
+
+Provides quick access to total visit counts:
+- Efficient counter implementation
+- Real-time updates
+- Cached results
+
+#### Visit Details
+![Visit Details Flow](docs/visits-list.png)
+
+Detailed visit information including:
+- Timestamp
+- User agent
+- Referrer
+- Geographic location (if available)
+- Paginated results for efficient retrieval
+
+Implementation highlights:
+- Separate endpoints for count and details
+- Optimized for different use cases
+- Supports filtering and sorting
